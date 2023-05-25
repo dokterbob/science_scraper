@@ -23,14 +23,19 @@ init(autoreset=True) # to reset colorama color settings after each print
 # query = "keyword:plants"
 # query = "keyword:permaculture"
 # query = "keyword:agroecology"
-query = "keyword:taxonomy"
+# query = "keyword:taxonomy"
+# query = "keyword:reforestation"
+query = "issn:2731-9202"
 
 base_url = "http://api.springernature.com/openaccess/jats"
 
 wait_time = 2 # Seconds between requests
 
+JATS_DIR = './science_scraper/jats_files'
+
+
 # Create a directory to store the XML files
-os.makedirs('jats_files', exist_ok=True)
+os.makedirs(JATS_DIR, exist_ok=True)
 
 session = get_requests_session()
 
@@ -75,7 +80,7 @@ for i, article_xml in enumerate(tqdm(get_articles(query, api_key), desc="Downloa
     doi = article_root.findtext('.//article-id[@pub-id-type="doi"]')
 
     # Create a unique filename for each article using the safe DOI
-    filename = os.path.join('jats_files', f'{safe_doi(doi)}.xml')
+    filename = os.path.join(JATS_DIR, f'{safe_doi(doi)}.xml')
 
     if not os.path.exists(filename):
         with open(filename, 'w', encoding='utf-8') as f:

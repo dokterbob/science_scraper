@@ -1,21 +1,30 @@
 import time
-import requests
 import os
 import xml.etree.ElementTree as ET
 
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
-from urllib.parse import quote
 from tqdm import tqdm
 from colorama import Fore, init
 
+from .secrets import api_key
+from .common import safe_doi, get_requests_session
+
 init(autoreset=True) # to reset colorama color settings after each print
 
-api_key = ""
 # query = "issn:1572-9680" # Agroforestry Systems
-#query = "keyword:agroforestry"
+# query = "keyword:agroforestry"
 # query = "keyword:forestry"
-query = "keyword:fungi"
+# query = "keyword:soil"
+# query = "keyword:fungi"
+# query = "keyword:ecology"
+# query = "keyword:forest"
+# query = "keyword:regeneration"
+# query = "keyword:biodiversity"
+# query = "keyword:climate"
+# query = "keyword:plants"
+# query = "keyword:permaculture"
+# query = "keyword:agroecology"
+query = "keyword:taxonomy"
+
 base_url = "http://api.springernature.com/openaccess/jats"
 
 wait_time = 2 # Seconds between requests
@@ -23,12 +32,7 @@ wait_time = 2 # Seconds between requests
 # Create a directory to store the XML files
 os.makedirs('jats_files', exist_ok=True)
 
-# Set up a requests session with automatic retries
-session = requests.Session()
-retry = Retry(total=5, backoff_factor=1, status_forcelist=[ 502, 503, 504 ])
-adapter = HTTPAdapter(max_retries=retry)
-session.mount('http://', adapter)
-session.mount('https://', adapter)
+session = get_requests_session()
 
 def get_articles(query, api_key, start_record=1, records_per_request=25):
     params = {
@@ -70,14 +74,11 @@ for i, article_xml in enumerate(tqdm(get_articles(query, api_key), desc="Downloa
     article_root = ET.fromstring(article_xml)
     doi = article_root.findtext('.//article-id[@pub-id-type="doi"]')
 
-    # Replace invalid characters in the DOI
-    safe_doi = doi.replace('/', '_')
-
     # Create a unique filename for each article using the safe DOI
-    filename = os.path.join('jats_files', f'{safe_doi}.xml')
+    filename = os.path.join('jats_files', f'{safe_doi(doi)}.xml')
 
     if not os.path.exists(filename):
-        with open(filename, 'w') as f:
+        with open(filename, 'w', encoding='utf-8') as f:
             f.write(article_xml)
         print(Fore.CYAN + f"Wrote article with DOI {doi} to {filename}")
     else:

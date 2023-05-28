@@ -8,12 +8,13 @@ packages = [{include = "science_scraper"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-requests = "^2.31.0"
+requests = "<2.29.0"
 tqdm = "^4.65.0"
 colorama = "^0.4.6"
 trafilatura = "^1.6.0"
 sentence-transformers = "^2.2.2"
 spacy = "^3.5.3"
+weaviate-client = "^3.19.2"
 
 
 [build-system]

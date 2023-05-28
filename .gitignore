@@ -1,6 +1,7 @@
 jats_files
 fulltext
 txt
+embeddings
 __pycache__
 settings.py
 secrets.py

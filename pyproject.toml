@@ -12,6 +12,7 @@ requests = "^2.31.0"
 tqdm = "^4.65.0"
 colorama = "^0.4.6"
 trafilatura = "^1.6.0"
+sentence-transformers = "^2.2.2"
 
 
 [build-system]

@@ -16,6 +16,7 @@ def main():
 
 	os.environ.setdefault("JATS_DIR", os.path.join(current_dir, "jats_files"))
 	os.environ.setdefault("DOWNLOAD_DIR", os.path.join(current_dir, "fulltext"))
+	os.environ.setdefault("TEXT_DIR", os.path.join(current_dir, "txt"))
 
 	sys.path.append(current_dir)
 

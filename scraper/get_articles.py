@@ -25,14 +25,14 @@ init(autoreset=True) # to reset colorama color settings after each print
 # query = "keyword:agroecology"
 # query = "keyword:taxonomy"
 # query = "keyword:reforestation"
-query = "issn:2731-9202"
+# query = "issn:2731-9202"
+query = "keyword:wildfire"
 
 base_url = "http://api.springernature.com/openaccess/jats"
 
 wait_time = 2 # Seconds between requests
 
-JATS_DIR = './science_scraper/jats_files'
-
+JATS_DIR = os.getenv("JATS_DIR")
 
 # Create a directory to store the XML files
 os.makedirs(JATS_DIR, exist_ok=True)

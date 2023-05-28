@@ -1,4 +1,5 @@
 jats_files
 fulltext
-secrets
 __pycache__
+settings.py
+secrets.py

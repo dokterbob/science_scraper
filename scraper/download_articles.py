@@ -9,10 +9,8 @@ from .common import safe_doi, get_requests_session
 # Base URL for downloading Springer content
 BASE_URL = 'http://link.springer.com/'
 
-JATS_DIR = './science_scraper/jats_files'
-
-# Directory to store downloaded files
-DOWNLOAD_DIR = './science_scraper/fulltext'
+JATS_DIR = os.getenv("JATS_DIR")
+DOWNLOAD_DIR = os.getenv("DOWNLOAD_DIR")
 
 session = get_requests_session()
 
@@ -80,24 +78,22 @@ def download_with_fallback(doi, file_type):
         print(f'{Fore.RED}Failed to download {url}. Error: {e}{Style.RESET_ALL}')
         raise
 
-def main():
-    os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-    jats_files = [f for f in os.listdir(JATS_DIR) if f.endswith('.xml')]
+jats_files = [f for f in os.listdir(JATS_DIR) if f.endswith('.xml')]
 
-    for jats_file in jats_files:
-        print(f'{Fore.GREEN}Processing {jats_file}...{Style.RESET_ALL}')
+for jats_file in jats_files:
+    print(f'{Fore.GREEN}Processing {jats_file}...{Style.RESET_ALL}')
 
-        doi = get_doi_from_jats(os.path.join(JATS_DIR, jats_file))
+    doi = get_doi_from_jats(os.path.join(JATS_DIR, jats_file))
 
-        if doi:
-            try:
-                download_with_fallback(doi, 'html')
-            except Exception:
-                print(f'{Fore.RED}HTML download failed. Trying PDF...{Style.RESET_ALL}')
-                download_with_fallback(doi, 'pdf')
-        else:
-            print(f'{Fore.RED}No DOI found in {jats_file}.{Style.RESET_ALL}')
+    if doi:
+        try:
+            download_with_fallback(doi, 'html')
+        except Exception:
+            print(f'{Fore.RED}HTML download failed. Trying PDF...{Style.RESET_ALL}')
+            download_with_fallback(doi, 'pdf')
+    else:
+        print(f'{Fore.RED}No DOI found in {jats_file}.{Style.RESET_ALL}')
 
-if __name__ == '__main__':
-    main()
+

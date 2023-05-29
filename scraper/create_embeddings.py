@@ -17,17 +17,11 @@ text_files = [f for f in os.listdir(TEXT_DIR) if f.endswith('.txt.gz')]
 model = SentenceTransformer('all-mpnet-base-v2', device='mps')
 
 def get_tokenizer():
-    from spacy.cli import download
+    nlp = spacy.blank('en')
+    nlp.add_pipe('sentencizer')
+    nlp.max_length=2000000
 
-    try:
-        # Try to load the model
-        return spacy.load('en_core_web_sm')
-    except OSError:
-        # If model is not found, download it
-        print("Model not found. Downloading...")
-        download('en_core_web_sm')
-        # Load the model after downloading
-        return spacy.load('en_core_web_sm')
+    return nlp
 
 tokenizer = get_tokenizer()
 
@@ -44,7 +38,7 @@ for text_file in tqdm(text_files, desc="Creating Embeddings", unit="file"):
         doc = tokenizer(text)
         sentences = [sent.text for sent in doc.sents]
 
-        embeddings = model.encode(sentences, batch_size=16)
+        embeddings = model.encode(sentences, batch_size=8)
         document_embedding = embeddings.mean(axis=0)
 
         # Save the embeddings to a .npy file

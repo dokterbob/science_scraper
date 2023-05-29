@@ -404,6 +404,23 @@ files = [
 ]
 
 [[package]]
+name = "en-core-web-sm"
+version = "3.5.0"
+description = "English pipeline optimized for CPU. Components: tok2vec, tagger, parser, senter, ner, attribute_ruler, lemmatizer."
+optional = false
+python-versions = "*"
+files = [
+    {file = "en_core_web_sm-3.5.0-py3-none-any.whl", hash = "sha256:0964370218b7e1672a30ac50d72cdc6b16f7c867496f1d60925691188f4d2510"},
+]
+
+[package.dependencies]
+spacy = ">=3.5.0,<3.6.0"
+
+[package.source]
+type = "url"
+url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl"
+
+[[package]]
 name = "filelock"
 version = "3.12.0"
 description = "A platform independent file lock."
@@ -2100,4 +2117,4 @@ grpc = ["grpcio", "grpcio-tools"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "944b84211d48de8b0c752390f87be4b9f75dbb016e4504299320caaf2769b817"
+content-hash = "e913da01fe89a5ba9ea0699f5fec003c44921080542dba660cc6aaf342b372b4"

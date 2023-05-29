@@ -25,14 +25,7 @@ def get_tokenizer():
 
 tokenizer = get_tokenizer()
 
-for text_file in tqdm(text_files, desc="Creating Embeddings", unit="file"):
-    text_filepath = os.path.join(TEXT_DIR, text_file)
-    embedding_filepath = os.path.join(EMBEDDINGS_DIR, text_file.replace('.txt.gz', '.npy'))
-
-    if os.path.exists(embedding_filepath):
-        print(f'{Fore.YELLOW}File {embedding_filepath} already exists, skipping...{Style.RESET_ALL}')
-        continue
-
+def embed_text(text_filepath, embedding_filepath):
     with gzip.open(text_filepath, 'rt') as file:
         text = file.read()
         doc = tokenizer(text)
@@ -43,3 +36,18 @@ for text_file in tqdm(text_files, desc="Creating Embeddings", unit="file"):
 
         # Save the embeddings to a .npy file
         np.save(embedding_filepath, document_embedding)
+
+
+for text_file in tqdm(text_files, desc="Creating Embeddings", unit="file"):
+    text_filepath = os.path.join(TEXT_DIR, text_file)
+    embedding_filepath = os.path.join(EMBEDDINGS_DIR, text_file.replace('.txt.gz', '.npy'))
+
+    if os.path.exists(embedding_filepath):
+        print(f'{Fore.YELLOW}File {Fore.BLUE}{embedding_filepath}{Fore.YELLOW} already exists, skipping...{Style.RESET_ALL}')
+        continue
+
+    try:
+        embed_text(text_filepath, embedding_filepath)
+    except Exception as e:
+        print(f'{Fore.RED}Error embedding {Fore.BLUE}{text_filepath}{Fore.RED}: {e}{Style.RESET_ALL}')
+        raise e

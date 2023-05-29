@@ -25,14 +25,19 @@ def get_tokenizer():
 
 tokenizer = get_tokenizer()
 
+def get_embeddings(text):
+    doc = tokenizer(text)
+    sentences = [sent.text for sent in doc.sents]
+
+    embeddings = model.encode(sentences, batch_size=8)
+    return embeddings.mean(axis=0)
+
+
 def embed_text(text_filepath, embedding_filepath):
     with gzip.open(text_filepath, 'rt') as file:
         text = file.read()
-        doc = tokenizer(text)
-        sentences = [sent.text for sent in doc.sents]
 
-        embeddings = model.encode(sentences, batch_size=8)
-        document_embedding = embeddings.mean(axis=0)
+        document_embedding = get_embeddings(text)
 
         # Save the embeddings to a .npy file
         np.save(embedding_filepath, document_embedding)
